@@ -3,12 +3,24 @@ class CustomSelect {
     constructor(selectElement) {
         this.selectElement = selectElement;
         this.customSelect = selectElement.closest('.custom-select');
+
+        // If there's no existing .custom-select wrapper, create one dynamically
+        if (!this.customSelect) {
+            this.customSelect = document.createElement('div');
+            this.customSelect.className = 'custom-select';
+            selectElement.parentNode.insertBefore(this.customSelect, selectElement);
+            this.customSelect.appendChild(selectElement);
+        }
+
         this.init();
     }
 
     init() {
         // Clear previous selectedCustomerId on page load
         localStorage.removeItem('selectedCustomerId');
+
+        // Hide the original select element so only the custom UI shows
+        this.selectElement.style.display = 'none';
 
         // Create trigger
         this.trigger = document.createElement('div');
@@ -66,7 +78,7 @@ class CustomSelect {
             if (option.style.display === 'none' || option.disabled) {
                 return;
             }
-            
+
             // Support headers: if option has data-header or class 'header', render as header
             if (option.dataset && option.dataset.header !== undefined) {
                 const headerDiv = document.createElement('div');
@@ -83,14 +95,14 @@ class CustomSelect {
                 optionElement.className = 'custom-select-option';
                 optionElement.textContent = option.text;
                 optionElement.dataset.value = option.value;
-                
+
                 // Copy all data attributes from original option to custom option
                 if (option.dataset) {
                     for (const [key, value] of Object.entries(option.dataset)) {
                         optionElement.dataset[key] = value;
                     }
                 }
-                
+
                 // Highlight selected option
                 if (option.value === selectedValue) {
                     optionElement.classList.add('selected');
@@ -149,7 +161,6 @@ class CustomSelect {
         this.trigger.title = "Selected: " + optionElement.textContent;
 
         // Update original select element
-        // Find the corresponding option element by matching the value from the custom option's dataset
         const valueToSet = optionElement.dataset.value;
         this.selectElement.value = valueToSet;
 
@@ -171,8 +182,8 @@ class CustomSelect {
             this.syncOptions();
         });
         observer.observe(this.selectElement, {
-            childList: true,       // <option> added/removed
-            subtree: true,         // text nodes inside options
+            childList: true,
+            subtree: true,
             attributes: false,
             characterData: false,
         });
@@ -181,16 +192,39 @@ class CustomSelect {
     syncOptions() {
         const wasOpen = this.dropdown.style.display === 'block';
         this.populateOptions();
-        // Re-sync the trigger text with the (potentially updated) selected value
         this.setTriggerText();
-        // If the dropdown was open, keep it open
         if (wasOpen) {
             this.dropdown.style.display = 'block';
             this.searchInput.value = '';
             this.filterOptions('');
         }
     }
+
+    /**
+     * Scans the page for all <select> elements with more than 10 <option>
+     * tags and converts them into CustomSelect instances, regardless of
+     * whether they already have a .custom-select wrapper parent.
+     */
+    static autoInit(minOptions = 10) {
+        const instances = [];
+        document.querySelectorAll('select').forEach((select) => {
+            // Skip ones already converted
+            if (select.dataset.customSelectInitialized) return;
+
+            const optionCount = select.querySelectorAll('option').length;
+            if (optionCount > minOptions) {
+                select.dataset.customSelectInitialized = 'true';
+                instances.push(new CustomSelect(select));
+            }
+        });
+        return instances;
+    }
 }
+
+// Example usage: run after DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    CustomSelect.autoInit();
+});
 
 // Initialize custom selects
 document.querySelectorAll('.custom-select').forEach(select => {
