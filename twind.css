@@ -1,0 +1,94 @@
+/*tailwind*/
+
+/*
+*** For searcheable combo boxes
+*/
+
+.custom-select {
+    position: relative !important;
+    width: 100%;
+    font-family: "Poppins", Arial, sans-serif;
+}
+
+.custom-select-trigger {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: #222;
+    font-size: 15px;
+    font-weight: 400;
+    min-height: 38px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    transition: border 0.2s;
+}
+.custom-select-trigger:focus, .custom-select-trigger:hover {
+    border-color: #2563eb;
+}
+
+.custom-select-dropdown {
+    display: none;
+    position: absolute !important;
+    left: 0;
+    width: 100%;
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    z-index: 100;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    margin-top: 2px;
+}
+
+.custom-select-search {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-bottom: 1px solid #f1f1f1;
+    outline: none;
+    font-size: 15px;
+    background: #f9fafb;
+    border-radius: 6px 6px 0 0;
+}
+
+.custom-select-options {
+    padding: 0;
+}
+
+.custom-select-option {
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    font-size: 12px;
+    color: #222;
+    background: #fff;
+    font-weight: 400;
+    border: none;
+    transition: background 0.15s;
+    padding-left: 20px;
+}
+.custom-select-option:hover {
+    background-color: #f3f4f6;
+}
+.custom-select-option.selected {
+    background-color: #e0e7ff;
+    color: #1d4ed8;
+    font-weight: 500;
+}
+
+.custom-select-header {
+    background: #fff;
+    color: #6b7280;
+    font-size: 15px;
+    font-weight: 900;
+    padding: 0.5rem 0.75rem 0.25rem 0.75rem;
+    border-bottom: 1px solid #f1f1f1;
+    margin-top: 0.25rem;
+    margin-bottom: 0.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
