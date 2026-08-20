@@ -232,11 +232,26 @@ document.querySelectorAll('.custom-select').forEach(select => {
     new CustomSelect(originalSelect);
 });
 
-function initializeCustomSelects() {
+function initializeCustomSelects(minOptions = 10) {
+    // Original behavior: init any select already wrapped in .custom-select
     document.querySelectorAll('.custom-select').forEach(select => {
         const originalSelect = select.querySelector('select');
-        if (!select.querySelector('.custom-select-trigger')) {
+        if (originalSelect && !select.querySelector('.custom-select-trigger')) {
             new CustomSelect(originalSelect);
         }
+    });
+
+    // New behavior: find any <select> on the page (wrapped or not) with
+    // more than `minOptions` options, and initialize it if not already done
+    document.querySelectorAll('select').forEach(originalSelect => {
+        const optionCount = originalSelect.querySelectorAll('option').length;
+        if (optionCount <= minOptions) return;
+
+        const wrapper = originalSelect.closest('.custom-select');
+
+        // Already initialized (has a trigger built) -> skip
+        if (wrapper && wrapper.querySelector('.custom-select-trigger')) return;
+
+        new CustomSelect(originalSelect);
     });
 }
