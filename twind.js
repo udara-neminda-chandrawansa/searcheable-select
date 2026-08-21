@@ -233,6 +233,7 @@ document.querySelectorAll('.custom-select').forEach(select => {
 });
 
 function initializeCustomSelects(minOptions = 10) {
+    console.log(`Initializing custom selects with more than ${minOptions} options...`);
     // Original behavior: init any select already wrapped in .custom-select
     document.querySelectorAll('.custom-select').forEach(select => {
         const originalSelect = select.querySelector('select');
