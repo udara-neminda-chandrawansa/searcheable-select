@@ -16,9 +16,6 @@ class CustomSelect {
     }
 
     init() {
-        // Clear previous selectedCustomerId on page load
-        localStorage.removeItem('selectedCustomerId');
-
         // Hide the original select element so only the custom UI shows
         this.selectElement.style.display = 'none';
 
@@ -105,7 +102,10 @@ class CustomSelect {
 
                 // Highlight selected option
                 if (option.value === selectedValue) {
+                    console.log(`Setting selected option: ${option.value}`);
                     optionElement.classList.add('selected');
+                } else{
+                    console.log(`Option not selected: ${option.value}`);
                 }
                 optionElement.addEventListener('click', () => {
                     this.selectOption(optionElement);
